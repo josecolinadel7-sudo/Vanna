@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Inicio - Vanna</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #0077b6;
+            --primary-hover: #023e8a;
+            --secondary-color: #00b4d8;
+            --accent-color: #ff6f61;
+            --background-color: #f8f9fa;
+            --card-background: #ffffff;
+            --text-color: #212529;
+            --label-color: #495057;
+            --border-color: #dee2e6;
+            --error-color: #d93025;
+            --success-color: #1e8e3e;
+            --theme-bg-dark: #03045e;
+            --theme-bg-main: #edf6ff;
+        }
+
+        body {
+            font-family: 'Poppins', "Segoe UI", Roboto, Arial, sans-serif;
+            background-color: var(--background-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            transition: background-color 0.3s ease;
+        }
+
+        /* --- ESTILOS DEL LOGIN --- */
+        #login-container .card {
+            background: var(--card-background);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.07), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            width: 100%;
+            max-width: 380px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        #login-container .card-header h2 {
+            margin: 0 0 8px 0;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-hover);
+        }
+
+        #login-container .card-header p {
+            margin: 0 0 28px 0;
+            color: var(--label-color);
+        }
+
+        .form-group { margin-bottom: 20px; text-align: left; }
+        label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 600; color: var(--label-color); }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-sizing: border-box;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.25);
+        }
+
+        #login-container button {
+            margin-top: 12px;
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            background-size: 150% 150%;
+        }
+
+        #login-container button:hover {
+            background-position: right center;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 150, 200, 0.3);
+        }
+
+        .message { margin-top: 16px; padding: 12px; border-radius: 8px; font-size: 14px; display: none; text-align: center; }
+        .error { display: block; background-color: #fbeae9; color: var(--error-color); }
+        .success { display: block; background-color: #e6f4ea; color: var(--success-color); }
+
+        /* --- ESTILOS PARA LA PÁGINA PRINCIPAL --- */
+        #main-content { display: none; width: 100%; height: 100%; background-color: var(--theme-bg-main); flex-direction: column; overflow-y: auto; }
+
+        .main-header {
+            background-color: var(--theme-bg-dark);
+            padding: 12px 32px;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: sticky; top: 0; z-index: 10;
+        }
+        .brand { font-size: 24px; font-weight: 700; color: #ffffff; cursor: pointer; }
+        .main-header nav { justify-self: center; }
+
+        .main-header nav a, #logoutBtn {
+            color: #ffffff; text-decoration: none; font-weight: 600; font-size: 16px; background: none; border: none;
+            cursor: pointer; padding: 8px 16px; border-radius: 8px; transition: background-color 0.2s, color 0.2s;
+        }
+        .main-header nav a:hover, #logoutBtn:hover { background-color: rgba(255, 255, 255, 0.1); }
+        #logoutBtn { color: #ffadad; }
+        #logoutBtn:hover { background-color: rgba(255, 173, 173, 0.2); }
+        .header-right { display: flex; align-items: center; justify-content: flex-end; gap: 12px; }
+
+        .title-banner {
+            text-align: center; padding: 24px; font-size: 1.5em; font-weight: 600; color: var(--primary-hover);
+            background: linear-gradient(180deg, #e0f2ff, var(--theme-bg-main));
+        }
+
+        .dashboard-container { flex-grow: 1; padding: 32px; display: flex; flex-direction: column; align-items: center; gap: 32px; }
+        .dashboard-row { width: 100%; max-width: 1400px; display: flex; justify-content: center; align-items: stretch; gap: 32px; }
+
+        .info-card {
+            background-color: var(--card-background); padding: 28px; border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(17, 93, 153, 0.06); flex: 1; min-width: 280px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease; border-top: 4px solid var(--primary-color);
+        }
+        .info-card:hover { transform: translateY(-6px); box-shadow: 0 12px 32px rgba(17, 93, 153, 0.1); }
+        .info-card h3 { margin-top: 0; font-size: 1.4em; color: var(--primary-hover); padding-bottom: 8px; margin-bottom: 16px; }
+        .info-card p, .info-card ul { line-height: 1.7; }
+        .info-card ul { list-style: none; padding-left: 0; margin: 0; color: var(--label-color); }
+        .info-card li { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
+        .info-card li strong { color: var(--text-color); }
+        .info-card .icon { font-size: 20px; line-height: 1.7; color: var(--secondary-color); }
+
+        .main-image {
+            max-width: 350px; border-radius: 16px; box-shadow: 0 8px 24px rgba(17, 93, 153, 0.06);
+            object-fit: cover; align-self: center; transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .main-image:hover { transform: translateY(-6px) scale(1.03); box-shadow: 0 12px 32px rgba(17, 93, 153, 0.12); }
+
+        /* Estilos para la página de Fincas */
+        #fincas-page {
+            padding: 32px; flex-grow: 1; text-align: center; display: none;
+            flex-direction: column; align-items: center; justify-content: center;
+        }
+        #fincas-page h1 { color: var(--primary-hover); margin-bottom: 40px; font-weight: 700; }
+        .fincas-container { display: flex; justify-content: center; align-items: center; gap: 40px; flex-wrap: wrap; }
+        
+        .finca-btn {
+            border: none; border-radius: 16px; padding: 40px 60px; font-size: 24px; font-weight: 600;
+            cursor: pointer; transition: all 0.3s ease; color: white;
+        }
+        .finca-btn#inmarlaca-btn,
+        .finca-btn#agrodirecto-btn {
+            background: linear-gradient(45deg, #0077b6, #00b4d8);
+        }
+        .finca-btn:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Estilos para la página del visor de Excel */
+        #excel-viewer-page,
+        #agrodirecto-viewer-page {
+            display: none;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            background-color: var(--background-color);
+        }
+        #excel-viewer-page iframe,
+        #agrodirecto-viewer-page iframe {
+            flex-grow: 1;
+            border: none;
+        }
+
+        @media (max-width: 1100px) {
+            .dashboard-row { flex-direction: column; align-items: center; }
+            .info-card, .main-image { width: 100%; max-width: 600px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="login-container">
+        <div class="card">
+            <div class="card-header">
+                <h2>Bienvenido a Vanna</h2>
+                <p>Inicia sesión para acceder al panel</p>
+            </div>
+            <form id="loginForm" autocomplete="off" novalidate>
+                <div class="form-group">
+                    <label for="email">Correo electrónico</label>
+                    <input id="email" type="email" placeholder="tu@correo.com" required />
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input id="password" type="password" placeholder="••••••••" required />
+                </div>
+                <button type="submit">Acceder</button>
+                <div id="msgContainer"></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="main-content">
+        <header class="main-header">
+            <div class="brand" id="brand-logo">Vanna</div>
+            <nav>
+                <a href="#" id="fincas-btn">FINCAS</a>
+            </nav>
+            <div class="header-right">
+                <button id="logoutBtn">Cerrar sesión</button>
+            </div>
+        </header>
+        <div id="dashboard-content">
+            <div class="title-banner">
+                <span>Una visión futurista en el mundo camaronero 🦐</span>
+            </div>
+            <main class="dashboard-container">
+                <div class="dashboard-row">
+                    <div class="info-card">
+                        <h3>Litopenaeus Vannamei</h3>
+                        <p>También conocido como camarón patiblanco, es la especie de camarón más cultivada y comercializada en el mundo, apreciada por su rápido crecimiento y adaptabilidad 🌎🦀.</p>
+                    </div>
+                    <img src="Camarones.jpg" alt="Camarones frescos en una mano" class="main-image">
+                    <div class="info-card">
+                        <h3>Características</h3>
+                        <ul>
+                            <li><span class="icon">🧬</span><div><strong>Nombre científico:</strong> Litopenaeus vannamei</div></li>
+                            <li><span class="icon">👪</span><div><strong>Familia:</strong> Penaeidae</div></li>
+                            <li><span class="icon">🌊</span><div><strong>Hábitat:</strong> Costas del Pacífico oriental</div></li>
+                            <li><span class="icon">📏</span><div><strong>Tamaño:</strong> Hasta 23 cm de longitud</div></li>
+                            <li><span class="icon">🎨</span><div><strong>Coloración:</strong> Blanco translúcido</div></li>
+                        </ul>
+                    </div>
+                </div>
+            </main>
+        </div>
+        <div id="fincas-page">
+            <h1>Seleccione una Finca</h1>
+            <div class="fincas-container">
+                <button class="finca-btn" id="inmarlaca-btn">INMARLACA</button>
+                <button class="finca-btn" id="agrodirecto-btn">AGRODIRECTO</button>
+            </div>
+        </div>
+        <div id="excel-viewer-page">
+            <iframe width="100%" height="100%" frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/146MXaCaMapoia6dlGgsWGt9fYc4GWPSf/preview?rm=minimal&amp;sd=true"></iframe>
+        </div>
+        <div id="agrodirecto-viewer-page">
+            <iframe width="100%" height="100%" frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/16kuv9Jb2cYtaVsYpTK4ZLp1mb0K1WIxg/preview?rm=minimal&amp;sd=true"></iframe>
+        </div>
+    </div>
+
+    <script>
+        const users = [
+            { email: 'josecolinadel7@gmail.com', pass: '0192' },
+            { email: 'sandyord0192@gmail.com', pass: '1308' }
+        ];
+
+        const form = document.getElementById('loginForm');
+        const inputEmail = document.getElementById('email');
+        const inputPass = document.getElementById('password');
+        const msgContainer = document.getElementById('msgContainer');
+
+        const loginContainer = document.getElementById('login-container');
+        const mainContent = document.getElementById('main-content');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        const fincasBtn = document.getElementById('fincas-btn');
+        const brandLogo = document.getElementById('brand-logo');
+        const dashboardContent = document.getElementById('dashboard-content');
+        const fincasPage = document.getElementById('fincas-page');
+
+        // Nuevos elementos para el visor de Excel
+        const inmarlacaBtn = document.getElementById('inmarlaca-btn');
+        const excelViewerPage = document.getElementById('excel-viewer-page');
+        const agrodirectoBtn = document.getElementById('agrodirecto-btn');
+        const agrodirectoViewerPage = document.getElementById('agrodirecto-viewer-page');
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            msgContainer.innerHTML = '';
+
+            const email = (inputEmail.value || '').trim().toLowerCase();
+            const pass = (inputPass.value || '').trim();
+
+            const validUser = users.find(user => user.email === email && user.pass === pass);
+
+            if (validUser) {
+                document.body.style.alignItems = 'stretch';
+                document.body.style.justifyContent = 'flex-start';
+                document.body.style.backgroundColor = '#edf6ff';
+                loginContainer.style.display = 'none';
+                mainContent.style.display = 'flex';
+            } else {
+                showMessage('El correo o la contraseña son incorrectos.', 'error');
+                inputPass.focus();
+            }
+        });
+
+        logoutBtn.addEventListener('click', () => {
+            mainContent.style.display = 'none';
+            loginContainer.style.display = 'block';
+            document.body.style.alignItems = 'center';
+            document.body.style.justifyContent = 'center';
+            document.body.style.backgroundColor = '#f8f9fa';
+            inputEmail.value = '';
+            inputPass.value = '';
+            msgContainer.innerHTML = '';
+            // Asegurarse de mostrar el dashboard la próxima vez que se inicie sesión
+            fincasPage.style.display = 'none';
+            excelViewerPage.style.display = 'none';
+            agrodirectoViewerPage.style.display = 'none';
+            dashboardContent.style.display = 'block';
+        });
+
+        fincasBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            dashboardContent.style.display = 'none';
+            excelViewerPage.style.display = 'none';
+            agrodirectoViewerPage.style.display = 'none';
+            fincasPage.style.display = 'flex';
+        });
+
+        brandLogo.addEventListener('click', () => {
+            fincasPage.style.display = 'none';
+            excelViewerPage.style.display = 'none';
+            agrodirectoViewerPage.style.display = 'none';
+            dashboardContent.style.display = 'block';
+        });
+
+        inmarlacaBtn.addEventListener('click', () => {
+            fincasPage.style.display = 'none';
+            excelViewerPage.style.display = 'flex';
+        });
+
+        agrodirectoBtn.addEventListener('click', () => {
+            fincasPage.style.display = 'none';
+            agrodirectoViewerPage.style.display = 'flex';
+        });
+
+        function showMessage(text, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = text;
+            msgContainer.appendChild(messageDiv);
+        }
+    </script>
+</body>
+</html>
